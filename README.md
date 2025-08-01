@@ -2,187 +2,181 @@
 
 [![Go Version](https://img.shields.io/badge/Go-1.24+-blue.svg)](https://golang.org/dl/)
 
+**Base template** to create microservices in Go with full observability, hexagonal architecture, and CI/CD configuration.
 
-**Plantilla base** para crear microservicios en Go con observabilidad completa, arquitectura hexagonal y configuración para CI/CD.
-
-> ⚠️ **Importante**: Esta es una plantilla de proyecto. Después de clonar, debes cambiar el nombre `go-server-template` por el nombre de tu nuevo proyecto en todos los archivos (go.mod, imports, nombres de contenedores, etc.).
-
+> ⚠️ **Important**: This is a project template. After cloning, you must change the name `go-server-template` to your new project name in all files (go.mod, imports, container names, etc.).
 
 ```bash
 curl --location 'http://localhost:8080/go-server-template/health-check'
 ```
 
+## 📋 Table of Contents
 
-## 📋 Tabla de Contenido
-
-1. [🎯 Características](#-características)
-2. [🏗️ Arquitectura](#-arquitectura)
-3. [📂 Estructura del Proyecto](#-estructura-del-proyecto)
-4. [🔧 Personalización](#-personalización)
-5. [⚙️ Configuración](#-configuración)
-   - [Variables de Entorno](#variables-de-entorno)
+1. [🎯 Features](#-features)
+2. [🏗️ Architecture](#-architecture)
+3. [📂 Project Structure](#-project-structure)
+4. [🔧 Customization](#-customization)
+5. [⚙️ Configuration](#-configuration)
+   - [Environment Variables](#environment-variables)
    - [GitHub Actions](#github-actions)
-6. [🚀 Inicio Rápido](#-inicio-rápido)
-7. [⚙️ Desarrollo](#-desarrollo)
-8. [🔍 Observabilidad](#-observabilidad)
-   - [Stack de Herramientas](#stack-de-herramientas)
-   - [Acceso a Herramientas](#acceso-a-herramientas)
-   - [Consultando Logs](#consultando-logs)
+6. [🚀 Quick Start](#-quick-start)
+7. [⚙️ Development](#-development)
+8. [🔍 Observability](#-observability)
+   - [Tool Stack](#tool-stack)
+   - [Access to Tools](#access-to-tools)
+   - [Querying Logs](#querying-logs)
 
-## 🎯 Características
+## 🎯 Features
 
-- **Logging Estructurado:** [zerolog](https://github.com/rs/zerolog) con correlación de trazas
-- **Tracing Distribuido:** OpenTelemetry integrado
-- **HTTP Framework:** [Echo](https://echo.labstack.com/) con middleware personalizado
-- **Configuración por Entorno:** Usando [go-utils](https://github.com/juanMaAV92/go-utils)
-- **Testing:** Tests unitarios e integración con coverage
-- **CI/CD:** GitHub Actions configurado
-- **Arquitectura Hexagonal:** Separación clara de responsabilidades
-- **Stack de Observabilidad:** Jaeger, Loki, Grafana, OTel Collector
+- **Structured Logging:** [zerolog](https://github.com/rs/zerolog) with trace correlation
+- **Distributed Tracing:** Integrated OpenTelemetry
+- **HTTP Framework:** [Echo](https://echo.labstack.com/) with custom middleware
+- **Environment Configuration:** Using [go-utils](https://github.com/juanMaAV92/go-utils)
+- **Testing:** Unit and integration tests with coverage
+- **CI/CD:** Configured GitHub Actions
+- **Hexagonal Architecture:** Clear separation of responsibilities
+- **Observability Stack:** Jaeger, Loki, Grafana, OTel Collector
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
-Implementa una arquitectura hexagonal simplificada:
+Implements a simplified hexagonal architecture:
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Aplicación    │    │     Dominio      │    │ Infraestructura │
+│   Application   │    │     Domain       │    │ Infrastructure  │
 │                 │    │                  │    │                 │
-│ • HTTP Handlers │───▶│ • Services       │◀───│ • Configuración │
-│ • Routing       │    │ • Domain Logic   │    │ • Base de Datos │
-│ • Middleware    │    │ • Models         │    │ • Servicios Ext │
+│ • HTTP Handlers │───▶│ • Services       │◀───│ • Configuration │
+│ • Routing       │    │ • Domain Logic   │    │ • Database      │
+│ • Middleware    │    │ • Models         │    │ • External Svcs │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
      cmd/              internal/services/       platform/ +
                        internal/domain/         services/
 ```
 
-**Beneficios:**
-- Testing fácil mediante mocking
-- Flexibilidad para cambiar implementaciones
-- Código mantenible y escalable
+**Benefits:**
+- Easy testing through mocking
+- Flexibility to change implementations
+- Maintainable and scalable code
 
-## 📂 Estructura del Proyecto
+## 📂 Project Structure
 
 ```
 .
-├── cmd/                        # 🚀 Capa de Aplicación
-│   ├── main.go                 # Configuración principal y arranque
-│   ├── server.go               # Configuración del servidor HTTP
-│   ├── routing.go              # Definición de rutas y middleware
-│   └── handlers/               # Handlers HTTP por dominio
-│       └── health/             # Endpoints de salud
-├── internal/                   # 🧠 Capa de Dominio
-│   ├── services/               # Servicios de aplicación
-│   │   └── health/             # Lógica de health checks
-│   │       ├── health.go       # Implementación del servicio
-│   │       └── models.go       # Modelos del servicio
-│   └── domain/                 # Entidades y lógica de negocio
-│       └── [future domains]    # Dominios específicos del negocio
-├── platform/                   # ⚙️ Capa de Infraestructura
-│   └── config/                 # Configuración por entorno
-│       ├── config.go           # Carga de configuración
-│       └── models.go           # Modelos de configuración
+├── cmd/                        # 🚀 Application Layer
+│   ├── main.go                 # Main configuration and startup
+│   ├── server.go               # HTTP server configuration
+│   ├── routing.go              # Route and middleware definition
+│   └── handlers/               # HTTP handlers by domain
+│       └── health/             # Health endpoints
+├── internal/                   # 🧠 Domain Layer
+│   ├── services/               # Application services
+│   │   └── health/             # Health check logic
+│   │       ├── health.go       # Service implementation
+│   │       └── models.go       # Service models
+│   └── domain/                 # Entities and business logic
+│       └── [future domains]    # Business-specific domains
+├── platform/                   # ⚙️ Infrastructure Layer
+│   └── config/                 # Environment configuration
+│       ├── config.go           # Configuration loading
+│       └── models.go           # Configuration models
 ├── tests/                      # 🧪 Tests
-│   ├── healthCheck_test.go     # Tests de integración
-│   └── helpers/                # Utilidades para testing
+│   ├── healthCheck_test.go     # Integration tests
+│   └── helpers/                # Testing utilities
 ├── .github/workflows/          # 🔄 CI/CD
-│   ├── test.yml                # Pipeline de tests
-│   └── docker-publish.yml      # Build y publicación
-├── .vscode/                    # 🛠️ Configuración IDE
-├── Dockerfile                  # 🐳 Configuración Docker
-└── main.go                     # Punto de entrada
+│   ├── test.yml                # Test pipeline
+│   └── docker-publish.yml      # Build and publish
+├── .vscode/                    # 🛠️ IDE configuration
+├── Dockerfile                  # 🐳 Docker configuration
+└── main.go                     # Entry point
 ```
 
-## 🔧 Personalización
+## 🔧 Customization
 
-Después de clonar esta plantilla, sigue estos pasos para personalizar tu proyecto:
+After cloning this template, follow these steps to customize your project:
 
-### 1. Cambiar el Nombre del Proyecto
+### 1. Change the Project Name
 
-Reemplaza `go-server-template` por el nombre de tu proyecto en los siguientes archivos:
+Replace `go-server-template` with your project name in the following files:
 
-**📁 Archivos a modificar:**
+**📁 Files to modify:**
 ```bash
-# 1. go.mod - Cambiar el nombre del módulo
-module github.com/tu-usuario/tu-nuevo-proyecto
+# 1. go.mod - Change the module name
+module github.com/your-user/your-new-project
 
-# 2. Todos los imports en archivos .go
-github.com/juanMaAV92/go-server-template → github.com/tu-usuario/tu-nuevo-proyecto
+# 2. All imports in .go files
+github.com/juanMaAV92/go-server-template → github.com/your-user/your-new-project
 
-# 3. platform/config/config.go - Cambiar MicroserviceName
-const MicroserviceName = "tu-nuevo-proyecto-ms"
+# 3. platform/config/config.go - Change MicroserviceName
+const MicroserviceName = "your-new-project-ms"
 
-# 4. Dockerfile - Cambiar el nombre del microservicio en el health check
+# 4. Dockerfile - Change the microservice name in the health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8080/tu-nuevo-proyecto-ms/health-check || exit 1
+    CMD curl -f http://localhost:8080/your-new-project-ms/health-check || exit 1
 ```
 
-## ⚙️ Configuración
+## ⚙️ Configuration
 
-### Variables de Entorno
+### Environment Variables
 
-El proyecto utiliza `go-utils` para configuración. Las siguientes variables están disponibles:
+The project uses `go-utils` for configuration. The following variables are available:
 
-| Variable | Descripción | Valor por Defecto | Requerida |
-|----------|-------------|-------------------|-----------|
-| `ENVIRONMENT` | Entorno de ejecución (`local`, `development`, `staging`, `production`) | `local` | No |
-| `PORT` | Puerto del servidor HTTP | `8080` | No |
-| `GRACEFUL_TIME` | Tiempo de gracia para shutdown (segundos) | `300` | No |
-| `OTLP_ENDPOINT` | Endpoint del OpenTelemetry Collector | `localhost:4318` | No |
+| Variable | Description | Default Value | Required |
+|----------|-------------|---------------|----------|
+| `ENVIRONMENT` | Execution environment (`local`, `development`, `staging`, `production`) | `local` | No |
+| `PORT` | HTTP server port | `8080` | No |
+| `GRACEFUL_TIME` | Graceful shutdown time (seconds) | `300` | No |
+| `OTLP_ENDPOINT` | OpenTelemetry Collector endpoint | `localhost:4318` | No |
 
 
 ### GitHub Actions
 
-Para configurar los workflows de CI/CD:
+To configure CI/CD workflows:
 
-1. **Ve a Settings → Secrets and variables → Actions**
-2. **Configura los siguientes Repository secrets:**
+1. **Go to Settings → Secrets and variables → Actions**
+2. **Set the following Repository secrets:**
 
-| Secret Name | Descripción | Ejemplo |
+| Secret Name | Description | Example |
 |-------------|-------------|---------|
-| `GITHUB_TOKEN` | Token para acceso a repositorios durante build de Docker y para repositorios privados | `ghp_xxxxx` |
+| `GITHUB_TOKEN` | Token for repository access during Docker build and for private repositories | `ghp_xxxxx` |
 
-## 🚀 Inicio Rápido
+## 🚀 Quick Start
 
-### Ejecución Local
+### Local Execution
 ```bash
-# Ejecutar directamente
+# Run directly
 go run main.go
 
-# O compilar y ejecutar
+# Or build and run
 go build -o bin/go-server-template main.go
 ./bin/go-server-template
 ```
 
 
-## ⚙️ Desarrollo
+## ⚙️ Development
 
 ### Tests
 ```bash
-# Ejecutar todos los tests con coverage
+# Run all tests with coverage
 go test ./... -coverprofile=coverage.out -coverpkg=./...
 
-# Ver reporte de coverage
+# View coverage report
 go tool cover -html=coverage.out
 ```
 
 
 ### Build
 ```bash
-# Build para producción
+# Production build
 go build -o bin/go-server-template main.go
 ```
 
-## 🔍 Observabilidad
+## 🔍 Observability
 
-### Stack de Herramientas
+### Tool Stack
 
-El proyecto incluye un stack completo de observabilidad:
+The project includes a complete observability stack:
 
 1. **OpenTelemetry Collector**
-   - Recibe telemetría de la aplicación
-   - Procesa y enruta a backends específicos
-   - Configuración flexible y desacoplada
-
-
-
+   - Receives telemetry from the application
+   - Processes and routes to specific backends
+   - Flexible and decoupled configuration
