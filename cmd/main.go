@@ -11,9 +11,6 @@ import (
 )
 
 const (
-	initServerStep = "init_server_step"
-	shutdownStep   = "shutdown_server_step"
-
 	errStartingMsg         = "Error starting server"
 	errStartingServicesMsg = "Error starting services"
 	errRunningMsg          = "Error while running server"

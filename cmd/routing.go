@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"github.com/juanMaAV92/go-server-template/cmd/handlers/health"
+	_ "github.com/juanMaAV92/go-server-template/docs"
 	utilsMiddleware "github.com/juanMaAV92/go-utils/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 const (
@@ -27,6 +29,7 @@ func configRoutes(inst *Instance, services *services) {
 
 	baseGroup := inst.Server.Group(inst.config.ServerName)
 	baseGroup.GET(healthCheckPath, handlers.health.Check)
+	baseGroup.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	// v1 := baseGroup.Group(apiV1Group)
 	// configureV1Routes(v1, handlers)
@@ -45,7 +48,6 @@ func initializeHandlers(services *services) *handlers {
 
 func configMiddleware(inst *Instance) {
 	inst.Server.Use(middleware.Recover())
-
 	inst.Server.Use(utilsMiddleware.Tracing(inst.config.ServerName))
 	inst.Server.Use(utilsMiddleware.TraceId())
 	inst.Server.Use(utilsMiddleware.Logging(inst.Logger))
