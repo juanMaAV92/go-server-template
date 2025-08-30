@@ -8,6 +8,7 @@ import (
 	"github.com/juanMaAV92/go-utils/errors"
 	"github.com/juanMaAV92/go-utils/log"
 	"github.com/juanMaAV92/go-utils/platform/server"
+	"github.com/juanMaAV92/go-utils/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/shopspring/decimal"
 )
@@ -28,6 +29,7 @@ func NewServer(cfg *config.Config, logger log.Logger) (*Instance, error) {
 	instance.HTTPErrorHandler = errors.CustomHTTPErrorHandler
 	instance.Debug = cfg.Environment == env.LocalEnvironment
 	decimal.MarshalJSONWithoutQuotes = true
+	instance.Validator = validator.New()
 
 	return &Instance{
 		Server: &server.Server{

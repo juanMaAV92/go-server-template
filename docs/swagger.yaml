@@ -1,0 +1,31 @@
+basePath: /go-server-template
+definitions:
+  health.HealthResponse:
+    properties:
+      status:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: juanMaAV92
+    url: https://github.com/juanMaAV92/go-server-template
+  description: API documentation for Go Server Template microservice
+  title: Go Server Template API
+  version: 1.0.0
+paths:
+  /health-check:
+    get:
+      description: Returns the health status
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.HealthResponse'
+      summary: Health Check
+      tags:
+      - health
+schemes:
+- http
+- https
+swagger: "2.0"

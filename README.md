@@ -25,6 +25,7 @@ curl --location 'http://localhost:8080/go-server-template/health-check'
    - [Tool Stack](#tool-stack)
    - [Access to Tools](#access-to-tools)
    - [Querying Logs](#querying-logs)
+9. [📚 API Documentation (Swagger)](#-api-documentation-swagger)
 
 ## 🎯 Features
 
@@ -180,3 +181,21 @@ The project includes a complete observability stack:
    - Receives telemetry from the application
    - Processes and routes to specific backends
    - Flexible and decoupled configuration
+
+## 📚 API Documentation (Swagger)
+
+This project uses [swaggo](https://github.com/swaggo/swag) to auto-generate Swagger documentation for the API.
+
+To generate or update the documentation, run:
+
+```bash
+swag init
+```
+
+The documentation will be available at:
+
+```
+http://localhost:8080/go-server-template/swagger/index.html
+```
+
+Add or update comments above your handler functions to keep the documentation up to date.
